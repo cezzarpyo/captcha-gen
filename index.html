@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CAPTCHA de Texto</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #212121;
+            margin: 0;
+        }
+
+        .captcha-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        canvas {
+            border: 1px solid #ccc;
+            margin-bottom: 10px;
+        }
+
+        .input {
+            border: 2px solid #e8e8e8;
+            padding: 15px;
+            border-radius: 10px;
+            background-color: #212121;
+            font-size: small;
+            font-weight: bold;
+            text-align: center;
+            color: #e8e8e8;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .input:focus {
+            outline-color: white;
+            background-color: #212121;
+            color: #e8e8e8;
+            -webkit-box-shadow: 5px 5px #888888;
+                    box-shadow: 5px 5px #888888;
+        }
+
+        #result {
+            margin-top: 10px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="captcha-container">
+        <canvas id="captchaCanvas" width="200" height="50"></canvas>
+        <input type="text" name="text" class="input" placeholder=" ">
+        <p id="result"></p>
+    </div>
+    <script>
+        function drawDistortedText(ctx, text) {
+            ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+            ctx.font = '30px Arial';
+            for (let i = 0; i < text.length; i++) {
+                const x = 10 + i * 30;
+                const y = 35 + Math.random() * 10 - 5;
+                const angle = Math.random() * 0.2 - 0.1;
+                ctx.save();
+                ctx.translate(x, y);
+                ctx.rotate(angle);
+                ctx.fillText(text[i], 0, 0);
+                ctx.restore();
+            }
+        }
+
+        document.querySelector('.input').addEventListener('input', function() {
+            const canvas = document.getElementById('captchaCanvas');
+            const ctx = canvas.getContext('2d');
+            drawDistortedText(ctx, this.value);
+        });
+
+        window.onload = function() {
+            const canvas = document.getElementById('captchaCanvas');
+            const ctx = canvas.getContext('2d');
+            drawDistortedText(ctx, ''); 
+        };
+    </script>
+</body>
+</html>
